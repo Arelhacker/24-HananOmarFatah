@@ -1,107 +1,318 @@
 <!DOCTYPE html>
-<!-- saved from url=(0040)file:///C:/Users/HP/Downloads/index.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Minimalist Login Form</title>
-    <meta name="description" content="Dark-theme login form with glowing neon accents, parallax orbs and crisp focus states.">
-    <meta name="author" content="Aigars Silkalns / Colorlib">
-    <link rel="canonical" href="https://puikinsh.github.io/login-forms/forms/neon/">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 100 100&#39;&gt;&lt;circle cx=&#39;50&#39; cy=&#39;50&#39; r=&#39;48&#39; fill=&#39;%236366f1&#39;/&gt;&lt;text x=&#39;50&#39; y=&#39;68&#39; font-size=&#39;60&#39; text-anchor=&#39;middle&#39; fill=&#39;white&#39; font-family=&#39;system-ui,sans-serif&#39;&gt;L&lt;/text&gt;&lt;/svg&gt;">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Neon Minimalist Login Form">
-    <meta property="og:description" content="Dark-theme login form with glowing neon accents, parallax orbs and crisp focus states.">
-    <meta property="og:url" content="https://puikinsh.github.io/login-forms/forms/neon/">
-    <meta property="og:image" content="https://puikinsh.github.io/login-forms/assets/screenshots/neon.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Neon Minimalist Login Form">
-    <meta name="twitter:description" content="Dark-theme login form with glowing neon accents, parallax orbs and crisp focus states.">
-    <meta name="twitter:image" content="https://puikinsh.github.io/login-forms/assets/screenshots/neon.png">
-    <link rel="stylesheet" href="file:///C:/Users/HP/Downloads/style.css">
+    <title>Login & Register | Tooplate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --black: #0A0A0A;
+            --concrete: #2C2C2C;
+            --steel: #404040;
+            --industrial-red: #E63946;
+            --industrial-orange: #FF6B35;
+            --light-gray: #A8A8A8;
+            --white: #F5F5F5;
+            --border: #1A1A1A;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            pointer-events: none;
+        }
+
+        .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12; pointer-events: none; }
+        .orb-1 { width: 400px; height: 400px; background: var(--industrial-red); top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: var(--industrial-orange); bottom: -80px; right: -80px; }
+
+        .back-link {
+            position: fixed;
+            top: 1.5rem; left: 1.5rem;
+            color: var(--light-gray);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+            z-index: 10;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+        }
+        .back-link:hover { color: var(--industrial-red); }
+        .back-link::before { content: '←'; font-size: 1rem; }
+
+        .card {
+            background: var(--concrete);
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 420px;
+            padding: 3rem 2.5rem;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            z-index: 1;
+            margin: 1rem;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 60px;
+            background: var(--industrial-red);
+        }
+
+        .card-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--industrial-red);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--light-gray);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn.active { color: var(--white); }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 2px;
+            background: var(--industrial-red);
+        }
+
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+
+        .form-group { margin-bottom: 1.25rem; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--light-gray);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--black);
+            border: 1px solid var(--steel);
+            color: var(--white);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.95rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus { border-color: var(--industrial-red); }
+        .form-group input::placeholder { color: var(--steel); }
+
+        .error-msg {
+            font-size: 0.78rem;
+            color: var(--industrial-red);
+            margin-top: 0.35rem;
+            min-height: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--industrial-red);
+            color: var(--white);
+            border: 2px solid var(--industrial-red);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 0.9rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover { background: transparent; color: var(--industrial-red); }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .alert.error { background: rgba(230,57,70,0.1); border-left: 3px solid var(--industrial-red); color: var(--industrial-red); }
+        .alert.success { background: rgba(80,200,120,0.1); border-left: 3px solid #50c878; color: #50c878; }
+        .alert.show { display: block; }
+    </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="logo-icon">⚡</div>
-                <h2>Sign In</h2>
-                <p>Access your account</p>
-            </div>
-            
-            <form class="login-form" id="loginForm" novalidate="">
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <input type="email" id="email" name="email" required="" autocomplete="email">
-                        <label for="email">Email</label>
-                        <span class="input-line"></span>
-                    </div>
-                    <span class="error-message" id="emailError"></span>
-                </div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-                <div class="form-group">
-                    <div class="input-wrapper password-wrapper">
-                        <input type="password" id="password" name="password" required="" autocomplete="current-password">
-                        <label for="password">Password</label>
-                        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
-                            <span class="toggle-icon"></span>
-                        </button>
-                        <span class="input-line"></span>
-                    </div>
-                    <span class="error-message" id="passwordError"></span>
-                </div>
+    <a href="../index.html" class="back-link">Kembali ke Beranda</a>
 
-                <div class="form-options">
-                    <div class="remember-wrapper">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember" class="checkbox-label">
-                            <span class="custom-checkbox"></span>
-                            Keep me signed in
-                        </label>
-                    </div>
-                    <a href="file:///C:/Users/HP/Downloads/index.html#" class="forgot-password">Forgot password?</a>
-                </div>
+    <div class="card">
+        <div class="card-logo">TOOPLATE</div>
 
-                <button type="submit" class="login-btn btn">
-                    <span class="btn-text">Sign In</span>
-                    <span class="btn-loader"></span>
-                    <span class="btn-glow"></span>
-                </button>
-            </form>
-
-            <div class="divider">
-                <span>or</span>
-            </div>
-
-            <div class="social-login">
-                <button type="button" class="social-btn google-btn">
-                    <span class="social-icon google-icon"></span>
-                    <span>Continue with Google</span>
-                </button>
-                <button type="button" class="social-btn apple-btn">
-                    <span class="social-icon apple-icon"></span>
-                    <span>Continue with Apple</span>
-                </button>
-            </div>
-
-            <div class="signup-link">
-                <p>New here? <a href="file:///C:/Users/HP/Downloads/index.html#">Create an account</a></p>
-            </div>
-
-            <div class="success-message" id="successMessage">
-                <div class="success-icon">✓</div>
-                <h3>Welcome back!</h3>
-                <p>Redirecting to your dashboard...</p>
-            </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+            <button class="tab-btn" onclick="switchTab('register')">Register</button>
         </div>
-        
-        <div class="background-effects">
-            <div class="glow-orb glow-orb-1"></div>
-            <div class="glow-orb glow-orb-2"></div>
-            <div class="glow-orb glow-orb-3"></div>
+
+        <!-- LOGIN -->
+        <div class="form-panel active" id="panel-login">
+            <div class="alert" id="login-alert"></div>
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="email@contoh.com">
+                <div class="error-msg" id="err-login-email"></div>
+            </div>
+            <div class="form-group">
+                <label for="login-pass">Password</label>
+                <input type="password" id="login-pass" placeholder="••••••••">
+                <div class="error-msg" id="err-login-pass"></div>
+            </div>
+            <button class="submit-btn" onclick="doLogin()">Masuk</button>
+        </div>
+
+        <!-- REGISTER -->
+        <div class="form-panel" id="panel-register">
+            <div class="alert" id="register-alert"></div>
+            <div class="form-group">
+                <label for="reg-name">Nama Lengkap</label>
+                <input type="text" id="reg-name" placeholder="Nama kamu">
+                <div class="error-msg" id="err-reg-name"></div>
+            </div>
+            <div class="form-group">
+                <label for="reg-email">Email</label>
+                <input type="email" id="reg-email" placeholder="email@contoh.com">
+                <div class="error-msg" id="err-reg-email"></div>
+            </div>
+            <div class="form-group">
+                <label for="reg-pass">Password</label>
+                <input type="password" id="reg-pass" placeholder="Minimal 6 karakter">
+                <div class="error-msg" id="err-reg-pass"></div>
+            </div>
+            <div class="form-group">
+                <label for="reg-pass2">Konfirmasi Password</label>
+                <input type="password" id="reg-pass2" placeholder="Ulangi password">
+                <div class="error-msg" id="err-reg-pass2"></div>
+            </div>
+            <button class="submit-btn" onclick="doRegister()">Daftar</button>
         </div>
     </div>
 
-    <script src="file:///C:/Users/shared/js/form-utils.js"></script>
-    <script src="file:///C:/Users/HP/Downloads/script.js"></script>
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+            });
+            document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + tab).classList.add('active');
+        }
 
-</body></html>
+        function showAlert(id, msg, type) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'alert ' + type + ' show';
+        }
+
+        function clearErrors(...ids) {
+            ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+        }
+
+        function doLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            clearErrors('err-login-email', 'err-login-pass');
+            let valid = true;
+            if (!email) { document.getElementById('err-login-email').textContent = 'Email wajib diisi'; valid = false; }
+            if (!pass)  { document.getElementById('err-login-pass').textContent = 'Password wajib diisi'; valid = false; }
+            if (!valid) return;
+
+            const users = JSON.parse(localStorage.getItem('tp_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === pass);
+            if (!user) { showAlert('login-alert', 'Email atau password salah.', 'error'); return; }
+
+            localStorage.setItem('tp_session', JSON.stringify({ name: user.name, email: user.email }));
+            showAlert('login-alert', 'Login berhasil! Mengalihkan...', 'success');
+            setTimeout(() => { window.location.href = '../welcome.html'; }, 1000);
+        }
+
+        function doRegister() {
+            const name  = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass  = document.getElementById('reg-pass').value;
+            const pass2 = document.getElementById('reg-pass2').value;
+            clearErrors('err-reg-name', 'err-reg-email', 'err-reg-pass', 'err-reg-pass2');
+            let valid = true;
+            if (!name)          { document.getElementById('err-reg-name').textContent = 'Nama wajib diisi'; valid = false; }
+            if (!email)         { document.getElementById('err-reg-email').textContent = 'Email wajib diisi'; valid = false; }
+            if (pass.length < 6){ document.getElementById('err-reg-pass').textContent = 'Password minimal 6 karakter'; valid = false; }
+            if (pass !== pass2) { document.getElementById('err-reg-pass2').textContent = 'Password tidak cocok'; valid = false; }
+            if (!valid) return;
+
+            const users = JSON.parse(localStorage.getItem('tp_users') || '[]');
+            if (users.find(u => u.email === email)) { showAlert('register-alert', 'Email sudah terdaftar.', 'error'); return; }
+
+            users.push({ name, email, password: pass });
+            localStorage.setItem('tp_users', JSON.stringify(users));
+            showAlert('register-alert', 'Akun berhasil dibuat! Silakan login.', 'success');
+            setTimeout(() => switchTab('login'), 1500);
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key !== 'Enter') return;
+            if (document.getElementById('panel-login').classList.contains('active')) doLogin();
+            else doRegister();
+        });
+    </script>
+</body>
+</html>
