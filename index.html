@@ -205,6 +205,34 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 /* TOAST */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--text);color:#fff;padding:.8rem 1.4rem;border-radius:14px;font-weight:700;font-size:.9rem;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;box-shadow:var(--shadow-lg)}
 .toast.show{transform:translateY(0);opacity:1}
+/* INFO ADMIN */
+.admin-hero{background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:var(--radius);padding:2rem 2.5rem;color:#fff;margin-bottom:2rem;display:flex;align-items:center;gap:1.5rem;position:relative;overflow:hidden}
+.admin-hero::before{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.08)}
+.admin-hero-avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0;border:3px solid rgba(255,255,255,.4)}
+.admin-hero h2{font-family:'Fredoka One',cursive;font-size:1.5rem;margin-bottom:.3rem}
+.admin-hero p{opacity:.85;font-size:.85rem}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+@media(max-width:700px){.admin-grid{grid-template-columns:1fr}}
+.admin-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
+.admin-card-header{padding:1rem 1.2rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border)}
+.admin-card-header .ch-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.admin-card-header .ch-title{font-weight:800;font-size:.95rem}
+.admin-card-header .ch-sub{font-size:.75rem;color:var(--muted)}
+.maps-frame{width:100%;height:280px;border:none;display:block}
+.kontak-body{padding:1.4rem}
+.kontak-item{display:flex;align-items:center;gap:1rem;padding:1rem;border-radius:14px;border:2px solid var(--border);margin-bottom:.8rem;transition:all .2s;cursor:pointer;text-decoration:none}
+.kontak-item:hover{border-color:var(--green);background:var(--green-light);transform:translateX(4px)}
+.kontak-item:last-child{margin-bottom:0}
+.kontak-item .ki-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.kontak-item .ki-label{font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kontak-item .ki-val{font-weight:800;font-size:.95rem;color:var(--text)}
+.kontak-item .ki-arrow{margin-left:auto;color:var(--muted);font-size:1rem}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:.7rem;width:100%;margin-top:1.2rem;padding:1rem;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(37,211,102,.3)}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(37,211,102,.45)}
+.jam-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.8rem}
+.jam-item{background:var(--bg);border-radius:10px;padding:.6rem .8rem}
+.jam-item .j-day{font-size:.72rem;color:var(--muted);font-weight:700}
+.jam-item .j-time{font-size:.82rem;font-weight:800;color:var(--text)}
 @media(max-width:900px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:1rem}.stats-strip{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:580px){.hero-emoji{display:none}.search-box input{width:100px}}
 </style>
@@ -267,6 +295,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="nav-item" onclick="showPage('video',this)"><span class="icon">🎬</span> Video</div>
   <div class="nav-item" onclick="showPage('kuis',this)"><span class="icon">✏️</span> Kuis</div>
   <div class="nav-item" onclick="showPage('progress',this)"><span class="icon">📈</span> Progress</div>
+  <div class="nav-item" onclick="showPage('admin',this)"><span class="icon">📍</span> Info Admin</div>
   <div class="sidebar-section">Akun</div>
   <div class="nav-item" onclick="doLogout()"><span class="icon">🚪</span> Keluar</div>
   <div class="sidebar-bottom">
@@ -389,6 +418,76 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="sec-header" style="margin-bottom:1rem"><span class="sec-title">Progress per Mapel</span></div>
     <div class="progress-subjects" id="progressSubjects"></div>
   </div>
+
+  <!-- INFO ADMIN -->
+  <div class="page" id="page-admin">
+    <div class="admin-hero">
+      <div class="admin-hero-avatar">👨‍💼</div>
+      <div>
+        <h2>Info Admin BelajarYuk!</h2>
+        <p>Hubungi kami untuk pertanyaan, kendala, atau saran seputar platform belajar</p>
+      </div>
+    </div>
+    <div class="admin-grid">
+      <!-- MAPS -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="ch-icon" style="background:#e8f0fe">📍</div>
+          <div><div class="ch-title">Lokasi Kami</div><div class="ch-sub">Kunjungi langsung atau cek rute di Maps</div></div>
+        </div>
+        <iframe
+          class="maps-frame"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.4804775506264!2d110.36949231476916!3d-7.795607794381563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5b8b8b8b8b8b%3A0x0!2zN8KwNDcnNDQuMiJTIDExMMKwMjInMTAuMiJF!5e0!3m2!1sid!2sid!4v1717660000000"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div style="padding:.8rem 1.2rem">
+          <a href="https://maps.app.goo.gl/TiRDapiPhsJzY64V7" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.75rem;background:var(--blue-light);color:var(--blue);border-radius:12px;font-weight:800;font-size:.85rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background='var(--blue)';this.style.color='#fff'" onmouseout="this.style.background='var(--blue-light)';this.style.color='var(--blue)'">
+            🗺️ Buka di Google Maps
+          </a>
+        </div>
+      </div>
+      <!-- KONTAK -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="ch-icon" style="background:#dcfce7">📞</div>
+          <div><div class="ch-title">Kontak Admin</div><div class="ch-sub">Siap membantu kamu belajar</div></div>
+        </div>
+        <div class="kontak-body">
+          <a class="kontak-item" href="https://wa.me/6281328282930" target="_blank">
+            <div class="ki-icon" style="background:#dcfce7">💬</div>
+            <div>
+              <div class="ki-label">WhatsApp</div>
+              <div class="ki-val">+62 813-2828-2930</div>
+            </div>
+            <span class="ki-arrow">›</span>
+          </a>
+          <div class="kontak-item" onclick="navigator.clipboard.writeText('+6281328282930');showToast('Nomor WA disalin! 📋')">
+            <div class="ki-icon" style="background:#fef3c7">📋</div>
+            <div>
+              <div class="ki-label">Salin Nomor</div>
+              <div class="ki-val">Ketuk untuk menyalin</div>
+            </div>
+            <span class="ki-arrow">›</span>
+          </div>
+          <div style="background:var(--bg);border-radius:14px;padding:1rem;margin-bottom:.8rem">
+            <div style="font-weight:800;font-size:.85rem;margin-bottom:.5rem">🕐 Jam Operasional</div>
+            <div class="jam-grid">
+              <div class="jam-item"><div class="j-day">Senin – Jumat</div><div class="j-time">08.00 – 16.00</div></div>
+              <div class="jam-item"><div class="j-day">Sabtu</div><div class="j-time">08.00 – 12.00</div></div>
+              <div class="jam-item"><div class="j-day">Minggu</div><div class="j-time" style="color:var(--red)">Libur</div></div>
+              <div class="jam-item"><div class="j-day">Hari Libur</div><div class="j-time" style="color:var(--red)">Libur</div></div>
+            </div>
+          </div>
+          <a class="wa-btn" href="https://wa.me/6281328282930?text=Halo%20Admin%20BelajarYuk!%20Saya%20ingin%20bertanya%20mengenai%20platform%20belajar." target="_blank">
+            <span style="font-size:1.3rem">💬</span> Chat WhatsApp Sekarang
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
