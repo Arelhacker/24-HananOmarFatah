@@ -86,14 +86,30 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
 .video-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s}
 .video-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-.video-thumb{position:relative;height:160px;background:#1e293b;display:flex;align-items:center;justify-content:center}
-.video-thumb iframe{width:100%;height:100%;border:none;pointer-events:none}
-.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);opacity:0;transition:opacity .2s}
-.video-card:hover .play-overlay{opacity:1}
-.play-btn{width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+/* =============================================
+   VIDEO THUMB — PERBAIKAN UTAMA
+   Sebelumnya pakai iframe langsung (tidak bisa),
+   sekarang pakai thumbnail image + klik buka modal
+   ============================================= */
+.video-thumb{position:relative;height:160px;background:#1e293b;overflow:hidden;cursor:pointer}
+.video-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);transition:background .2s}
+.video-card:hover .play-overlay{background:rgba(0,0,0,.5)}
+.play-btn{width:52px;height:52px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 16px rgba(0,0,0,.3);transition:transform .2s}
+.video-card:hover .play-btn{transform:scale(1.1)}
 .video-info{padding:1rem}
 .video-title{font-weight:800;font-size:.9rem;line-height:1.4;margin-bottom:.5rem}
 .video-meta{color:var(--muted);font-size:.78rem;display:flex;gap:.8rem;align-items:center}
+/* VIDEO MODAL */
+.video-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:250;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)}
+.video-modal-overlay.active{display:flex}
+.video-modal-box{background:#000;border-radius:20px;overflow:hidden;width:100%;max-width:780px;box-shadow:0 20px 60px rgba(0,0,0,.8);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.video-modal-header{background:#1e293b;padding:.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between}
+.video-modal-title{color:#fff;font-weight:800;font-size:.95rem}
+.video-modal-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.video-modal-close:hover{background:rgba(255,255,255,.3)}
+.video-modal-frame{position:relative;padding-bottom:56.25%;height:0}
+.video-modal-frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
 /* KUIS */
 .kuis-intro{background:linear-gradient(135deg,var(--yellow),var(--orange));border-radius:var(--radius);padding:1.5rem 2rem;color:#fff;margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between}
 .kuis-intro h2{font-family:'Fredoka One',cursive;font-size:1.4rem;margin-bottom:.3rem}
@@ -224,6 +240,19 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- QUIZ MODAL -->
 <div class="quiz-overlay" id="quizOverlay">
   <div class="quiz-box" id="quizBox"></div>
+</div>
+
+<!-- VIDEO MODAL (BARU) -->
+<div class="video-modal-overlay" id="videoModalOverlay">
+  <div class="video-modal-box">
+    <div class="video-modal-header">
+      <span class="video-modal-title" id="videoModalTitle">Judul Video</span>
+      <button class="video-modal-close" onclick="closeVideoModal()">✕</button>
+    </div>
+    <div class="video-modal-frame">
+      <iframe id="videoModalIframe" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+  </div>
 </div>
 
 <!-- TOAST -->
@@ -433,6 +462,48 @@ const progressData=[
   {icon:'🗺️',name:'IPS',pct:45,color:'var(--orange)',bg:'#ffedd5'},
 ];
 
+/* =============================================
+   FUNGSI UTAMA PERBAIKAN VIDEO
+   Ekstrak YouTube ID → thumbnail & embed URL
+   ============================================= */
+function getYouTubeId(url) {
+  // Tangkap tepat 11 karakter ID, abaikan parameter ?si= dll
+  const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url ? url.match(regex) : null;
+  return match ? match[1] : null;
+}
+
+function getThumbnailUrl(ytUrl) {
+  const id = getYouTubeId(ytUrl);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+}
+
+function getEmbedUrl(ytUrl) {
+  const id = getYouTubeId(ytUrl);
+  return id ? `https://www.youtube.com/embed/${id}?autoplay=1` : '';
+}
+
+/* Buka video di modal */
+function openVideoModal(ytUrl, title) {
+  document.getElementById('videoModalTitle').textContent = title;
+  document.getElementById('videoModalIframe').src = getEmbedUrl(ytUrl);
+  document.getElementById('videoModalOverlay').classList.add('active');
+}
+
+/* Tutup modal & hentikan video */
+function closeVideoModal() {
+  document.getElementById('videoModalOverlay').classList.remove('active');
+  document.getElementById('videoModalIframe').src = ''; // stop video
+}
+
+// Tutup modal kalau klik di luar box
+document.getElementById('videoModalOverlay').addEventListener('click', function(e){
+  if(e.target === this) closeVideoModal();
+});
+
+/* =============================================
+   RENDER FUNCTIONS
+   ============================================= */
 function renderMateri(filter='semua'){
   const items=filter==='semua'?materiData:materiData.filter(m=>m.mapel===filter);
   document.getElementById('materiList').innerHTML=items.map(m=>`
@@ -445,15 +516,23 @@ function renderMateri(filter='semua'){
 }
 
 function renderVideo(){
-  document.getElementById('videoGrid').innerHTML=videoData.map(v=>`
-    <div class="video-card">
-      <div class="video-thumb"><iframe src="${v.yt}" allowfullscreen></iframe><div class="play-overlay"><div class="play-btn">▶</div></div></div>
+  document.getElementById('videoGrid').innerHTML=videoData.map(v=>{
+    const thumb = getThumbnailUrl(v.yt);
+    return `
+    <div class="video-card" onclick="openVideoModal('${v.yt}', '${v.title.replace(/'/g,"\\'")}')">
+      <div class="video-thumb">
+        <img src="${thumb}" alt="${v.title}" onerror="this.style.display='none';this.parentElement.style.background='#1e293b'"/>
+        <div class="play-overlay">
+          <div class="play-btn">▶</div>
+        </div>
+      </div>
       <div class="video-info">
         <div style="color:${v.color};font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">${v.mapel}</div>
         <div class="video-title">${v.title}</div>
         <div class="video-meta"><span>⏱ ${v.durasi}</span><span>${v.icon}</span></div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderKuis(){
@@ -494,6 +573,9 @@ function filterMapel(mapel,btn){
   renderMateri(mapel);
 }
 
+/* =============================================
+   KUIS LOGIC
+   ============================================= */
 function startKuis(idx){
   quizState={kuis:kuisData[idx],q:0,score:0,answered:false};
   renderQuestion();
@@ -555,6 +637,9 @@ function showResult(){
     </div>`;
 }
 
+/* =============================================
+   AUTH LOGIC
+   ============================================= */
 function switchTab(tab){
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='register')));
   document.getElementById('form-login').classList.toggle('active',tab==='login');
@@ -594,7 +679,6 @@ async function doRegister(){
     }
     showMsg('r-msg',data.message||'Gagal mendaftar.','error');
   }catch(e){
-    // Simpan lokal jika API tidak bisa diakses
     const saved=JSON.parse(localStorage.getItem('belajarUsers')||'{}');
     if(saved[user]){showMsg('r-msg','Username sudah digunakan!','error');return;}
     saved[user]={pass,name};
