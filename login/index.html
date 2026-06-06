@@ -142,34 +142,34 @@
             <button class="tab-btn" onclick="switchTab('register')">Register</button>
         </div>
 
-        <!-- LOGIN -->
+        <!-- LOGIN: pakai username + password -->
         <div class="form-panel active" id="panel-login">
             <div class="alert" id="login-alert"></div>
             <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" placeholder="email@contoh.com">
-                <div class="error-msg" id="err-login-email"></div>
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" placeholder="Username kamu" autocomplete="username">
+                <div class="error-msg" id="err-login-username"></div>
             </div>
             <div class="form-group">
                 <label for="login-pass">Password</label>
-                <input type="password" id="login-pass" placeholder="••••••••">
+                <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
                 <div class="error-msg" id="err-login-pass"></div>
             </div>
             <button class="submit-btn" onclick="doLogin()">Masuk</button>
         </div>
 
-        <!-- REGISTER -->
+        <!-- REGISTER: nama, username, password -->
         <div class="form-panel" id="panel-register">
             <div class="alert" id="register-alert"></div>
             <div class="form-group">
                 <label for="reg-name">Nama Lengkap</label>
-                <input type="text" id="reg-name" placeholder="Nama kamu">
+                <input type="text" id="reg-name" placeholder="Nama lengkap kamu">
                 <div class="error-msg" id="err-reg-name"></div>
             </div>
             <div class="form-group">
-                <label for="reg-email">Email</label>
-                <input type="email" id="reg-email" placeholder="email@contoh.com">
-                <div class="error-msg" id="err-reg-email"></div>
+                <label for="reg-username">Username</label>
+                <input type="text" id="reg-username" placeholder="Buat username unik">
+                <div class="error-msg" id="err-reg-username"></div>
             </div>
             <div class="form-group">
                 <label for="reg-pass">Password</label>
@@ -186,6 +186,16 @@
     </div>
 
     <script>
+        // Tentukan path welcome.html secara dinamis agar tidak salah di GitHub Pages
+        function getWelcomePath() {
+            const path = window.location.pathname;
+            // Kalau ada /login/ di path, naik satu level
+            if (path.includes('/login/')) {
+                return path.replace(/\/login\/.*$/, '/welcome.html');
+            }
+            return '../welcome.html';
+        }
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
@@ -205,40 +215,48 @@
         }
 
         function doLogin() {
-            const email = document.getElementById('login-email').value.trim();
+            const username = document.getElementById('login-username').value.trim();
             const pass = document.getElementById('login-pass').value;
-            clearErrors('err-login-email', 'err-login-pass');
+            clearErrors('err-login-username', 'err-login-pass');
             let valid = true;
-            if (!email) { document.getElementById('err-login-email').textContent = 'Email wajib diisi'; valid = false; }
-            if (!pass)  { document.getElementById('err-login-pass').textContent = 'Password wajib diisi'; valid = false; }
+            if (!username) { document.getElementById('err-login-username').textContent = 'Username wajib diisi'; valid = false; }
+            if (!pass)     { document.getElementById('err-login-pass').textContent = 'Password wajib diisi'; valid = false; }
             if (!valid) return;
 
             const users = JSON.parse(localStorage.getItem('tp_users') || '[]');
-            const user = users.find(u => u.email === email && u.password === pass);
-            if (!user) { showAlert('login-alert', 'Email atau password salah.', 'error'); return; }
+            const user = users.find(u => u.username === username && u.password === pass);
 
-            localStorage.setItem('tp_session', JSON.stringify({ name: user.name, email: user.email }));
+            if (!user) {
+                showAlert('login-alert', 'Username atau password salah.', 'error');
+                return;
+            }
+
+            localStorage.setItem('tp_session', JSON.stringify({ name: user.name, username: user.username }));
             showAlert('login-alert', 'Login berhasil! Mengalihkan...', 'success');
-            setTimeout(() => { window.location.href = '../welcome.html'; }, 1000);
+            setTimeout(() => { window.location.href = getWelcomePath(); }, 1000);
         }
 
         function doRegister() {
-            const name  = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const pass  = document.getElementById('reg-pass').value;
-            const pass2 = document.getElementById('reg-pass2').value;
-            clearErrors('err-reg-name', 'err-reg-email', 'err-reg-pass', 'err-reg-pass2');
+            const name     = document.getElementById('reg-name').value.trim();
+            const username = document.getElementById('reg-username').value.trim();
+            const pass     = document.getElementById('reg-pass').value;
+            const pass2    = document.getElementById('reg-pass2').value;
+            clearErrors('err-reg-name', 'err-reg-username', 'err-reg-pass', 'err-reg-pass2');
             let valid = true;
             if (!name)           { document.getElementById('err-reg-name').textContent = 'Nama wajib diisi'; valid = false; }
-            if (!email)          { document.getElementById('err-reg-email').textContent = 'Email wajib diisi'; valid = false; }
+            if (!username)       { document.getElementById('err-reg-username').textContent = 'Username wajib diisi'; valid = false; }
+            if (username.includes(' ')) { document.getElementById('err-reg-username').textContent = 'Username tidak boleh mengandung spasi'; valid = false; }
             if (pass.length < 6) { document.getElementById('err-reg-pass').textContent = 'Password minimal 6 karakter'; valid = false; }
             if (pass !== pass2)  { document.getElementById('err-reg-pass2').textContent = 'Password tidak cocok'; valid = false; }
             if (!valid) return;
 
             const users = JSON.parse(localStorage.getItem('tp_users') || '[]');
-            if (users.find(u => u.email === email)) { showAlert('register-alert', 'Email sudah terdaftar.', 'error'); return; }
+            if (users.find(u => u.username === username)) {
+                showAlert('register-alert', 'Username sudah dipakai, coba yang lain.', 'error');
+                return;
+            }
 
-            users.push({ name, email, password: pass });
+            users.push({ name, username, password: pass });
             localStorage.setItem('tp_users', JSON.stringify(users));
             showAlert('register-alert', 'Akun berhasil dibuat! Silakan login.', 'success');
             setTimeout(() => switchTab('login'), 1500);
